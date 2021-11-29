@@ -18,19 +18,19 @@ class App extends Base {
         `;
     }
 
-    get header() {
+    get header(): Header {
         return this.querySelector('ani-viewer-header');
     }
 
-    get sideNav() {
+    get sideNav(): SideNav {
         return this.querySelector('ani-viewer-side-nav');
     }
 
-    get content() {
+    get content(): Content {
         return this.querySelector('ani-viewer-content');
     }
 
-    async onSearchClick({detail}) {
+    async onSearchClick({detail}: CustomEvent) {
         console.log('search clicked', detail.query);
         const searchResult = await window.electron.search(detail.query);
         this.header.setAttribute('search-results', JSON.stringify(searchResult));
@@ -40,7 +40,7 @@ class App extends Base {
         this.sideNav.open();
     }
 
-    async showDetails({detail}) {
+    async showDetails({detail}: CustomEvent) {
         const details = await window.electron.details(detail.id);
         details.isFavorite = await window.electron.isFavorite(detail.id);
 
