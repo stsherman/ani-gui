@@ -1,0 +1,37 @@
+.app-favorites {
+    display: flex;
+}
+
+.app-favorites-tile {
+    padding: 2px;
+}
+
+.app-favorites-tile:hover {
+    border: 2px solid #FFFFFF;
+    padding: 0;
+}
+
+.app-favorites-tile > div {
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+    background: #474747;
+    cursor: pointer;
+}
+
+.app-favorites-tile img {
+    width: 180px;
+    height: 232px;
+    object-fit: cover;
+}
+
+.app-favorites-tile .title {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 8px 4px;
+}
+
+.app-favorites-tile .text {
+    font-size: 12px;
+    padding: 4px 8px 8px;
+}

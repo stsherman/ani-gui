@@ -4,21 +4,21 @@ const db = new sqlite3.Database('ani-viewer.sqlite');
 db.serialize(() => {
     db.run(`
         CREATE TABLE IF NOT EXISTS Anime(
-           Id                   TEXT    PRIMARY KEY NOT NULL,
-           DisplayName          TEXT    NOT NULL,
-           ImageUrl             TEXT    NOT NULL,
-           Description          TEXT
+           id                   TEXT    PRIMARY KEY NOT NULL,
+           displayName          TEXT    NOT NULL,
+           imageUrl             TEXT    NOT NULL,
+           description          TEXT
         );
     `);
     db.run(`
         CREATE TABLE IF NOT EXISTS Favorites(
-           AnimeId              TEXT    NOT NULL
+            animeId              TEXT    NOT NULL
         );
     `);
     db.run(`
         CREATE TABLE IF NOT EXISTS History(
-           AnimeId              TEXT    NOT NULL,
-           Episode              INT     NOT NULL
+           animeId              TEXT    NOT NULL,
+           episode              INT     NOT NULL
         );
     `);
 });
@@ -39,55 +39,54 @@ function seed() {
 }
 seed();
 
-export function run(sql: string, param?: any) {
+export function run(sql, param?) {
     return new Promise((resolve, reject) => {
         try {
-            db.run(sql, param, (error: any) => error ? reject(error) : resolve(void(0)));
+            db.run(sql, param, (error) => error ? reject(error) : resolve(void(0)));
         } catch (e) {
             reject(e);
         }
     });
 }
 
-export function get<T>(sql: string, param?: any) {
+export function get(sql, param?) {
     return new Promise((resolve, reject) => {
         try {
-            db.get(sql, param, (error: any, row: T) => error ? reject(error) : resolve(row));
+            db.get(sql, param, (error, row) => error ? reject(error) : resolve(row));
         } catch (e) {
             reject(e);
         }
     });
 }
 
-export function all<T>(sql: string, param?: any) {
+export function all(sql, param?) {
     return new Promise((resolve, reject) => {
         try {
-            db.all(sql, param, (error: any, rows: Array<T>) => error ? reject(error) : resolve(rows));
+            db.all(sql, param, (error, rows) => error ? reject(error) : resolve(rows));
         } catch (e) {
             reject(e);
         }
     });
 }
 
-export function each<T>(sql: string, param?: any, fn?: (error: any, row: T) => void) {
+export function each(sql, param, fn) {
     return new Promise((resolve, reject) => {
         try {
-            db.each(sql, param, fn, (error: any, rows: Array<T>) => error ? reject(error) : resolve(rows));
+            db.each(sql, param, fn, (error, rows) => error ? reject(error) : resolve(rows));
         } catch (e) {
             reject(e);
         }
     });
 }
 
-export async function getFavorites () {
-    return await all<FavoritesModal>(`SELECT a.* FROM Favorites f JOIN Anime a ON a.Id = f.AnimeId`);
+export async function getFavorites() {
+    return await all(`SELECT a.* FROM Favorites f JOIN anime a ON a.id = f.AnimeId`);
 }
 
 export async function getHistory() {
-    return await all<HistoryModal>(`SELECT a.* FROM History f JOIN Anime a ON a.Id = f.AnimeId`);
+    return await all(`SELECT a.* FROM History f JOIN anime a ON a.id = f.AnimeId`);
 }
 
 export async function isFavorite(id: string) {
-    return await get<FavoritesModal>(`SELECT * FROM Favorites WHERE AnimeId = ?`, id)
-        .then(x => !!x);
+    return await get(`SELECT * FROM Favorites WHERE animeId = ?`, id).then(x => !!x);
 }
