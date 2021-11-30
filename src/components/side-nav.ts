@@ -1,5 +1,5 @@
 class SideNav extends Base {
-    style() {
+    css() {
         return css`
           ani-viewer-side-nav {
             position: absolute;
@@ -49,8 +49,9 @@ class SideNav extends Base {
         this.setAttribute('is-open', 'true');
     }
 
-    onItemClick({target}) {
+    onItemClick({target}: Event) {
         this.close();
+        // @ts-ignore
         this.dispatchEvent(new CustomEvent('show-content', {bubbles: true, detail: {target: target.dataset.target}}));
     }
 
@@ -61,7 +62,7 @@ class SideNav extends Base {
             .addEventListener('click', (e) => this.onItemClick(e));
     }
 
-    render() {
+    html() {
         return html`
             <div id="side-nav-content">
                 <ul>

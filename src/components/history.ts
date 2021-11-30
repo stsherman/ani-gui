@@ -1,55 +1,55 @@
-class Favorites extends Base {
+// @ts-ignore
+class History extends Base {
     static get observedAttributes() {
         return ['favorites'];
     }
 
-    setFavorites(favorites) {
-        this.setAttribute('favorites', JSON.stringify(favorites));
+    setHistory(history: Array<HistoryModal>) {
+        this.setAttribute('history', JSON.stringify(history));
     }
 
-    onFavoritesChanged(favorites) {
-        if (favorites) {
-            favorites = JSON.parse(favorites);
+    onHistoryChanged(history: Array<HistoryModal>) {
+        if (history) {
             this.removeChildren(':not(style)');
-            this.append(...favorites.map(x => {
-                const element = document.createElement('ani-viewer-favorites-tile');
-                element.setAttribute('id', x.Id);
-                element.setAttribute('image', x.ImageUrl);
-                element.setAttribute('title', x.DisplayName);
-                element.setAttribute('text', x.Description.substr(0, 15));
+            this.append(...history.map(x => {
+                const element = document.createElement('ani-viewer-history-tile');
+                element.setAttribute('id', x.id);
+                element.setAttribute('image', x.imageUrl);
+                element.setAttribute('title', x.displayName);
+                element.setAttribute('text', x.description.substr(0, 15));
                 return element;
             }));
         }
     }
 
-    style() {
+    css() {
         return css`
-          ani-viewer-favorites {
+          ani-viewer-history {
             display: flex;
           }
         `;
     }
 
-    render() {
+    html() {
         return html``;
     }
 }
 
-class FavoritesTile extends Base {
+class HistoryTile extends Base {
     static get observedAttributes() {
         return ['id', 'image', 'title', 'text'];
     }
 
-    onImageChanged(image) {
+    onImageChanged(image: string) {
         this.querySelector('img').setAttribute('src', image);
     }
 
-    onTitleChanged(title) {
-        this.querySelector('.title').innerText = title;
+    onTitleChanged(title: string) {
+        this.querySelector<HTMLSpanElement>('.title').innerText = title;
     }
 
-    onTextChanged(text) {
-        this.querySelector('.text').innerText = text;
+    onTextChanged(text: string) {
+        this.querySelector<HTMLSpanElement>('.text').innerText = text;
     }
 
     onTileClick() {
@@ -62,18 +62,18 @@ class FavoritesTile extends Base {
         this.addEventListener('click', () => this.onTileClick());
     }
 
-    style() {
+    css() {
         return css`
-          ani-viewer-favorites-tile {
+          ani-viewer-history-tile {
             padding: 2px;  
           }
 
-          ani-viewer-favorites-tile:hover {
+          ani-viewer-history-tile:hover {
             border: 2px solid #FFFFFF;
             padding: 0;
           }
           
-          ani-viewer-favorites-tile > div {
+          ani-viewer-history-tile > div {
             display: flex;
             flex-direction: column;
             width: 180px;
@@ -81,38 +81,39 @@ class FavoritesTile extends Base {
             cursor: pointer;
           }
 
-          ani-viewer-favorites-tile img {
+          ani-viewer-history-tile img {
             width: 180px;
             height: 232px;
             object-fit: cover;
           }
 
-          ani-viewer-favorites-tile .title {
+          ani-viewer-history-tile .title {
             font-size: 14px;
             font-weight: bold;
             padding: 8px 8px 4px;
           }
 
-          ani-viewer-favorites-tile .text {
+          ani-viewer-history-tile .text {
             font-size: 12px;
             padding: 4px 8px 8px;
           }
         `;
     }
 
-    render() {
+    html() {
         return html`
             <div>
-                <img src="${this.image}"/>
-                <span class="title">${this.title}</span>
-                <span class="text">${this.text}</span>
+                <img />
+                <span class="title"></span>
+                <span class="text"></span>
             </div>
         `;
     }
 }
 
 try {
-    customElements.define('ani-viewer-favorites', Favorites);
-    customElements.define('ani-viewer-favorites-tile', FavoritesTile);
+    // @ts-ignore
+    customElements.define('ani-viewer-history', History);
+    customElements.define('ani-viewer-history-tile', HistoryTile);
 } catch (e) {
 }

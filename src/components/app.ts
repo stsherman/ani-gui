@@ -1,5 +1,5 @@
 class App extends Base {
-    style() {
+    css() {
         return css`
           ani-viewer-app {
             display: flex;
@@ -45,6 +45,7 @@ class App extends Base {
         details.isFavorite = await window.electron.isFavorite(detail.id);
 
         const detailsElement = document.createElement('ani-viewer-details');
+        // @ts-ignore
         detailsElement.setDetails(details);
 
         this.content.setContent(detailsElement);
@@ -54,6 +55,7 @@ class App extends Base {
     async showFavorites() {
         const favorites = await window.electron.getFavorites();
         const favoritesElement = document.createElement('ani-viewer-favorites');
+        // @ts-ignore
         favoritesElement.setFavorites(favorites);
         this.content.setContent(favoritesElement);
         this.header.setTitle('Favorites');
@@ -62,12 +64,13 @@ class App extends Base {
     async showHistory() {
         const history = await window.electron.getHistory();
         const historyElement = document.createElement('ani-viewer-history');
+        // @ts-ignore
         historyElement.setHistory(history);
         this.content.setContent(historyElement);
         this.header.setTitle('History')
     }
 
-    async showContent({detail}) {
+    async showContent({detail}: CustomEvent) {
         switch (detail.target) {
             case 'favorites':
                 await this.showFavorites();
@@ -79,15 +82,15 @@ class App extends Base {
     }
 
     async onConnected() {
-        this.addEventListener('menu-click', e => this.onMenuClick(e));
-        this.addEventListener('search', async e => await this.onSearchClick(e));
-        this.addEventListener('show-details', async e => await this.showDetails(e));
-        this.addEventListener('show-content', async e => await this.showContent(e));
+        this.addEventListener('menu-click', e => this.onMenuClick());
+        this.addEventListener('search', async (e: CustomEvent) => await this.onSearchClick(e));
+        this.addEventListener('show-details', async (e: CustomEvent) => await this.showDetails(e));
+        this.addEventListener('show-content', async (e: CustomEvent) => await this.showContent(e));
 
         await this.showFavorites();
     }
 
-    render() {
+    html() {
         return html`
             <ani-viewer-header title="Favorites"></ani-viewer-header>
             <ani-viewer-side-nav></ani-viewer-side-nav>

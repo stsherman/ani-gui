@@ -1,29 +1,31 @@
 class Details extends Base {
     static get observedAttributes() { return ['details']; }
 
-    setDetails(details) {
+    setDetails(details: DetailsModal) {
         this.setAttribute('details', JSON.stringify(details));
     }
 
-    onDetailsChanged(details) {
+    onDetailsChanged(details: DetailsModal) {
         if (details) {
-            details = JSON.parse(details);
-            this.querySelector('#image').src = details.image;
-            this.querySelector('#type').innerText = details.type;
-            this.querySelector('#description').innerText = details['plot summary'];
+            this.querySelector<HTMLImageElement>('#image').src = details.image;
+            this.querySelector<HTMLSpanElement>('#type').innerText = details.type;
+            this.querySelector<HTMLParagraphElement>('#description').innerText
+                = details['plot summary'];
             this.querySelector('#genres').append(...details.genre.split(',').map(x => {
                 const pill = document.createElement('span');
                 pill.classList.add('pill', 'shadow', 'mb8');
                 pill.innerText = x;
                 return pill;
             }));
-            this.querySelector('#status').innerText = details.status;
-            this.querySelector('#episodes span').innerText = JSON.stringify(details.episodes);
-            this.querySelector('.star').style.color = details.isFavorite ? '#ffd500' : '#FFFFFF';
+            this.querySelector<HTMLSpanElement>('#status').innerText = details.status;
+            this.querySelector<HTMLSpanElement>('#episodes span').innerText
+                = JSON.stringify(details.episodes);
+            this.querySelector<HTMLSpanElement>('.star').style.color
+                = details.isFavorite ? '#ffd500' : '#FFFFFF';
         }
     }
 
-    style() {
+    css() {
         return css`
           ani-viewer-details #image {
             width: 350px;
@@ -47,7 +49,7 @@ class Details extends Base {
         `;
     }
 
-    render() {
+    html() {
         return html`
             <div id="details" class="row">
                 <img id="image" />

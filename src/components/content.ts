@@ -1,10 +1,10 @@
 class Content extends Base {
-    setContent(content) {
+    setContent(content: Element) {
         this.removeChildren(`ani-viewer-content > :not(style)`);
         this.appendChild(content);
     }
 
-    style() {
+    css() {
         return css`
             ani-viewer-content {
                 height: 100%;
@@ -21,7 +21,7 @@ class Content extends Base {
         `;
     }
 
-    render() {
+    html() {
         return html``;
     }
 }

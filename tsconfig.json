@@ -14,7 +14,7 @@
       "*": ["node_modules/*"]
     },
     "target": "es5",
-    "types": ["./types"]
+    "typeRoots": ["./src/typings"]
   },
   "include": [
     "src/**/*"

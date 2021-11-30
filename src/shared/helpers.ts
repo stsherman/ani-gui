@@ -1,9 +1,10 @@
 class Deferrable {
-    constructor(props) {
+    private actions: Array<() => void>;
+    constructor() {
         this.actions = [];
     }
 
-    add(action) {
+    add(action: () => void) {
         if (typeof action !== "function") {
             throw "Can only add functions to a Deferrable";
         }
@@ -24,10 +25,8 @@ HTMLCollection.prototype.forEach = function (func) {
     }
 }
 
-
-
 HTMLElement.prototype.removeChildren = function (selector) {
-    this.children.forEach(x => {
+    this.children.forEach((x: Element) => {
         if (!selector || x.matches(selector)) {
             x.remove();
         }

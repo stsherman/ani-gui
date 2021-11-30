@@ -1,15 +1,12 @@
 class Base extends HTMLElement {
-    deferrable = new Deferrable();
+    private deferrable: Deferrable = new Deferrable();
+    private isInitialized: Boolean = false;
+
     connectedCallback() {
-        let content = this.render();
         const template = document.createElement('template');
-        let style = this.style();
-        if (style.length) {
-            style = `<style>${style}</style>`;
-        }
         template.innerHTML = `
-            ${style}
-            ${content.outerHTML || content}
+            <style>${this.css()}</style>
+            ${this.html()}
         `;
         this.appendChild(template.content.cloneNode(true));
         this.onConnected();
@@ -19,22 +16,28 @@ class Base extends HTMLElement {
 
     onConnected() {}
 
-    render() {
+    html() {
         return html``;
     }
 
-    style() {
+    css() {
         return css``;
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         if (!this.isInitialized) {
             this.deferrable.add(() => this.attributeChangedCallback(name, oldValue, newValue));
             return;
         }
         const funcName = `on${name.replace(/^(\w)|-(\w)|_(\w)/g, v => v.toUpperCase()).replace(/[_\-]/g, '')}Changed`;
-        if (oldValue !== newValue && typeof this[funcName] === 'function') {
-            this[funcName](newValue);
+        // @ts-ignore
+        const func = this[funcName];
+        if (oldValue !== newValue && typeof func === 'function') {
+            try {
+                func(JSON.parse(newValue));
+            } catch (e) {
+                func(newValue);
+            }
         }
     }
 }

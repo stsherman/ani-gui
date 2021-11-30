@@ -1,30 +1,17 @@
 class Header extends Base {
     static get observedAttributes() {
-        return ['title', 'search-results'];
+        return ['title'];
     }
 
-    setTitle(title) {
+    setTitle(title: string) {
         this.setAttribute('title', title);
     }
 
-    onTitleChanged(title) {
-        this.querySelector('#title').innerText = title;
+    onTitleChanged(title: string) {
+        this.querySelector<HTMLDivElement>('#title').innerText = title;
     }
 
-    onSearchResultsChanged(searchResults) {
-        console.log(searchResults);
-        if (!searchResults) {
-            this.querySelector('#search-results').innerHTML = '';
-            return;
-        }
-        this.querySelector('#search-results').innerHTML = JSON.parse(searchResults).map(x => `
-            <span data-id="${x.id}" title="${x.name}"><img src="${x.image}"/><label>${x.name}</label></span>
-        `).join('') || `
-                <span class="empty-results">No results found</span>
-            `;
-    }
-
-    style() {
+    css() {
         return css`
           ani-viewer-header header {
             display: flex;
@@ -136,16 +123,17 @@ class Header extends Base {
     }
 
     triggerSearch() {
-        const query = this.querySelector('#search input').value;
+        const query = this.querySelector<HTMLInputElement>('#search input').value;
         if (query)
             this.dispatchEvent(new CustomEvent('search', {bubbles: true, detail: {query}}));
         else this.removeAttribute('search-results');
     }
 
-    showDetails({target}) {
-        const id = target.dataset['id'];
+    showDetails({target}: Event) {
+        // @ts-ignore
+        const id: string = target.dataset['id'];
         this.dispatchEvent(new CustomEvent('show-details', {bubbles: true, detail: {id}}));
-        this.querySelector('#search input').value = '';
+        this.querySelector<HTMLInputElement>('#search input').value = '';
         this.removeAttribute('search-results');
     }
 
@@ -154,33 +142,26 @@ class Header extends Base {
     }
 
     onConnected() {
-        let timer;
         this.querySelector('#menu .material-icons')
             .addEventListener('click', () => this.onMenuClick());
         this.querySelector('#search .material-icons')
             .addEventListener('click', () => this.triggerSearch());
-        this.querySelector('#search input')
-            .addEventListener('input', (e) => {
-                timer && clearInterval(timer);
-                timer = setTimeout(() => {
-                    this.triggerSearch();
-                }, 1000);
-            });
         this.querySelector('#search-results')
             .addEventListener('click', (e) => this.showDetails(e));
         document.addEventListener('click', (e) => {
+            // @ts-ignore
             if (!e.path.find(x => x.matches && x.matches('#search')))
                 this.removeAttribute('search-results');
         });
     }
 
-    render() {
+    html() {
         return html`
             <header>
                 <div id="menu">
                     <span class="material-icons">menu</span>
                 </div>
-                <div id="title">${this.title}</div>
+                <div id="title"></div>
                 <div id="search">
                     <span>
                         <input type="text" placeholder="Search anime"/>

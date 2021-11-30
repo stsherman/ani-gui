@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 
-exports.search = function (query) {
+exports.search = function (query: string) {
     return new Promise((resolve, reject) => {
         try {
             if (!query) {
@@ -8,7 +8,7 @@ exports.search = function (query) {
                 return;
             }
             const child = spawn('ani-cli', ['-Q', query]);
-            child.stdout.on('data', (data) => {
+            child.stdout.on('data', (data: BufferSource) => {
                 const result = new TextDecoder().decode(data)
                     .split('\n')
                     .filter(x => x)
@@ -19,11 +19,11 @@ exports.search = function (query) {
                 resolve(result);
                 child.kill();
             });
-            child.stderr.on('data', (data) => {
+            child.stderr.on('data', (data: BufferSource) => {
                 reject(data);
                 child.kill();
             });
-            child.on('error', (data) => {
+            child.on('error', (data: BufferSource) => {
                 reject(data);
                 child.kill();
             });

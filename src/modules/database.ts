@@ -39,54 +39,55 @@ function seed() {
 }
 seed();
 
-exports.run = function (sql, param) {
+export function run(sql: string, param?: any) {
     return new Promise((resolve, reject) => {
         try {
-            db.run(sql, param, (error) => error ? reject(error) : resolve());
+            db.run(sql, param, (error: any) => error ? reject(error) : resolve(void(0)));
         } catch (e) {
             reject(e);
         }
     });
-};
-
-exports.get = function (sql, param) {
-    return new Promise((resolve, reject) => {
-        try {
-            db.get(sql, param, (error, row) => error ? reject(error) : resolve(row));
-        } catch (e) {
-            reject(e);
-        }
-    });
-};
-
-exports.all = function (sql, param) {
-    return new Promise((resolve, reject) => {
-        try {
-            db.all(sql, param, (error, rows) => error ? reject(error) : resolve(rows));
-        } catch (e) {
-            reject(e);
-        }
-    });
-};
-
-exports.each = function (sql, param, fn) {
-    return new Promise((resolve, reject) => {
-        try {
-            db.each(sql, param, fn, (error, rows) => error ? reject(error) : resolve(rows));
-        } catch (e) {
-            reject(e);
-        }
-    });
-};
-
-exports.getFavorites = async function () {
-    return await exports.all(`SELECT a.* FROM Favorites f JOIN Anime a ON a.Id = f.AnimeId`);
 }
 
-exports.getHistory = async function () {
-    return await exports.all(`SELECT a.* FROM History f JOIN Anime a ON a.Id = f.AnimeId`);
+export function get<T>(sql: string, param?: any) {
+    return new Promise((resolve, reject) => {
+        try {
+            db.get(sql, param, (error: any, row: T) => error ? reject(error) : resolve(row));
+        } catch (e) {
+            reject(e);
+        }
+    });
 }
 
-exports.isFavorite = async function (id) {
-    return await exports.get(`SELECT * FROM Favorites WHERE AnimeId = ?`, id).then(x => !!x);
+export function all<T>(sql: string, param?: any) {
+    return new Promise((resolve, reject) => {
+        try {
+            db.all(sql, param, (error: any, rows: Array<T>) => error ? reject(error) : resolve(rows));
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+export function each<T>(sql: string, param?: any, fn?: (error: any, row: T) => void) {
+    return new Promise((resolve, reject) => {
+        try {
+            db.each(sql, param, fn, (error: any, rows: Array<T>) => error ? reject(error) : resolve(rows));
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+export async function getFavorites () {
+    return await all<FavoritesModal>(`SELECT a.* FROM Favorites f JOIN Anime a ON a.Id = f.AnimeId`);
+}
+
+export async function getHistory() {
+    return await all<HistoryModal>(`SELECT a.* FROM History f JOIN Anime a ON a.Id = f.AnimeId`);
+}
+
+export async function isFavorite(id: string) {
+    return await get<FavoritesModal>(`SELECT * FROM Favorites WHERE AnimeId = ?`, id)
+        .then(x => !!x);
 }
