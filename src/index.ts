@@ -4,6 +4,18 @@ import { app, BrowserWindow } from 'electron';
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
+import './components/base';
+import './components/app';
+import './components/content';
+import './components/details';
+import './components/favorites';
+import './components/header';
+import './components/history';
+import './components/search-results';
+import './components/side-nav';
+import './shared/helpers';
+import './shared/templates';
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
