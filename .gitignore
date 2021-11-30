@@ -383,7 +383,7 @@ csx/
 ecf/
 rcf/
 
-# Windows Store app package directories and files
+# Windows Store App package directories and files
 AppPackages/
 BundleArtifacts/
 Package.StoreAssociation.xml
@@ -564,3 +564,4 @@ FodyWeavers.xsd
 .history/
 
 **/*.sqlite
+/.webpack/
