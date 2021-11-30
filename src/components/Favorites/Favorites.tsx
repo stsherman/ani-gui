@@ -25,7 +25,7 @@ export default function Favorites() {
     }
 
     useEffect(() => {
-        console.log('getting favorites');
+        console.log('getting Favorites');
         getFavorites();
     }, []);
 

@@ -1,9 +1,8 @@
 import React from 'react';
 import './App.css';
-import Header from '../header/Header';
-import Favorites from "../favorites/Favorites";
-import {FavoritesTileProps} from "../favorites/Favorites.d";
-import Content from "../content/Content";
+import Header from '../Header/Header';
+import Favorites from "../Favorites/Favorites";
+import Content from "../Content/Content";
 
 
 export default function App() {
