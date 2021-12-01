@@ -1,9 +1,19 @@
 import React from 'react';
-import './App.css';
 import Header from '../Header/Header';
 import Favorites from "../Favorites/Favorites";
 import Content from "../Content/Content";
+import styled from 'styled-components';
 
+const StyledAppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  padding: 16px;
+  min-width: 740px;
+  max-width: 1100px;
+  margin: auto;
+`;
 
 export default function App() {
     const onSearchClick = async (query: string) => {
@@ -15,7 +25,7 @@ export default function App() {
         console.log('onMenuClick');
     }
     return (
-        <div id="app">
+        <StyledAppContainer>
             <Header
                 title={"Favorites"}
                 onSearchClick={onSearchClick}
@@ -24,6 +34,6 @@ export default function App() {
             <Content>
                 <Favorites /> 
             </Content>
-        </div>
+        </StyledAppContainer>
     );
 }
