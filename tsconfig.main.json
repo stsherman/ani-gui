@@ -17,7 +17,8 @@
       "resolveJsonModule": true,
       "isolatedModules": true,
       "noEmit": false,
-      "outDir": "./build"
+      "outDir": "./build",
+      "typeRoots": ["src/typings", "src-main/typings", "node_modules/@types"]
     },
     "include": [
       "src-main/**/*"

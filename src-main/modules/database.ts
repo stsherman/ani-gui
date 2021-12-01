@@ -1,3 +1,5 @@
+import {Statement} from "sqlite3";
+
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('ani-viewer.sqlite');
 
@@ -39,54 +41,54 @@ function seed() {
 }
 seed();
 
-export function run(sql, param?) {
+export function run(sql: string, ...param: any[]): Promise<void> {
     return new Promise((resolve, reject) => {
         try {
-            db.run(sql, param, (error) => error ? reject(error) : resolve(void(0)));
+            db.run(sql, param, (error: Error | null) => error ? reject(error) : resolve(void(0)));
         } catch (e) {
             reject(e);
         }
     });
 }
 
-export function get(sql, param?) {
+export function get<T>(sql: string, ...param: any[]): Promise<T> {
     return new Promise((resolve, reject) => {
         try {
-            db.get(sql, param, (error, row) => error ? reject(error) : resolve(row));
+            db.get(sql, param, (error: Error | null, row: T) => error ? reject(error) : resolve(row));
         } catch (e) {
             reject(e);
         }
     });
 }
 
-export function all(sql, param?) {
+export function all<T>(sql: string, ...param: any[]): Promise<T[]> {
     return new Promise((resolve, reject) => {
         try {
-            db.all(sql, param, (error, rows) => error ? reject(error) : resolve(rows));
+            db.all(sql, param, (error: Error | null, rows: T[]) => error ? reject(error) : resolve(rows));
         } catch (e) {
             reject(e);
         }
     });
 }
 
-export function each(sql, param, fn) {
+export function each<T>(sql: string, param: any, callback?: (this: Statement, err: Error | null, row: T) => void): Promise<T[]> {
     return new Promise((resolve, reject) => {
         try {
-            db.each(sql, param, fn, (error, rows) => error ? reject(error) : resolve(rows));
+            db.each(sql, param, callback, (error: Error | null, rows: T[]) => error ? reject(error) : resolve(rows));
         } catch (e) {
             reject(e);
         }
     });
 }
 
-export async function getFavorites() {
-    return await all(`SELECT a.* FROM Favorites f JOIN anime a ON a.id = f.AnimeId`);
+export async function getFavorites(): Promise<Anime[]> {
+    return await all<Anime>(`SELECT a.* FROM Favorites f JOIN anime a ON a.id = f.AnimeId`);
 }
 
-export async function getHistory() {
-    return await all(`SELECT a.* FROM History f JOIN anime a ON a.id = f.AnimeId`);
+export async function getHistory(): Promise<Anime[]> {
+    return await all<Anime>(`SELECT a.* FROM History f JOIN anime a ON a.id = f.AnimeId`);
 }
 
-export async function isFavorite(id: string) {
-    return await get(`SELECT * FROM Favorites WHERE animeId = ?`, id).then(x => !!x);
+export async function isFavorite(id: string): Promise<boolean> {
+    return await get<boolean>(`SELECT * FROM Favorites WHERE animeId = ?`, id).then(x => !!x);
 }

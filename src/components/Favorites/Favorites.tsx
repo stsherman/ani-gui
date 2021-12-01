@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import './Favorites.css';
-import { FavoritesProps, FavoritesTileProps } from "./Favorites.d";
 
 function FavoritesTile({id, imageUrl, displayName, description}: Partial<FavoritesTileProps>) {
     return (
@@ -18,7 +17,6 @@ export default function Favorites() {
     const [favorites, setFavorites] = useState([] as FavoritesTileProps[]);
 
     async function getFavorites() {
-        // @ts-ignore
         const f = await window.api.getFavorites();
         console.log('f', f);
         setFavorites(f);
@@ -31,7 +29,6 @@ export default function Favorites() {
 
     return (
         <div className="app-favorites">
-            {console.log('favorites', favorites)}
             {favorites?.map(favorite => (<FavoritesTile
                 id={favorite.id}
                 imageUrl={favorite.imageUrl}

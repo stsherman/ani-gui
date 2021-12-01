@@ -1,10 +1,10 @@
-export interface FavoritesTileProps {
+interface FavoritesTileProps {
     id: string;
     imageUrl: string;
     displayName: string;
     description: string;
 }
 
-export interface FavoritesProps {
+interface FavoritesProps {
     favorites: FavoritesTileProps[];
 }

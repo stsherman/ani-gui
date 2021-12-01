@@ -1,12 +1,6 @@
 import React, {createRef} from 'react';
 import './Header.css';
 
-interface HeaderProps {
-    title: string;
-    onSearchClick: (value: string) => void;
-    onMenuClick: () => void;
-}
-
 export default function Header({title, onSearchClick, onMenuClick}: Partial<HeaderProps>) {
     const inputRef = createRef<HTMLInputElement>();
     const triggerSearch = () => {
