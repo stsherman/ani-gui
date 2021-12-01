@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import MaterialIcon from "../MaterialIcon";
+import {Params, useParams} from "react-router-dom";
 
 const StyledDetailsContainer = styled.div`
   display: flex;
@@ -54,7 +55,27 @@ const StyledWrappingRow = styled(StyledRow)`
   flex-wrap: wrap;
 `;
 
-export default function Details({image, type, 'plot summary': summary, genre, status, episodes, isFavorite}: DetailsProps) {
+export default function Details(props: Partial<DetailsProps>) {
+    let {id}: Readonly<Params<"id">> = useParams();
+
+    const [
+        {image, type, isFavorite, summary, status, genre, episodes},
+        setDetails
+    ] = useState(props || {});
+
+    async function getDetails() {
+        const f = await window.api.getDetails(id);
+        console.log('f', f);
+        setDetails(f);
+    }
+
+    if (!props) {
+        useEffect(() => {
+            console.log('getting details');
+            getDetails();
+        }, []);
+    }
+
     return (
         <StyledDetailsContainer>
             <StyledRow>
@@ -70,7 +91,7 @@ export default function Details({image, type, 'plot summary': summary, genre, st
                     </StyledRow>
                     <p id="description">{summary}</p>
                     <StyledWrappingRow id="genres">
-                        {...genre.split(',').map((g: string) => (
+                        {...(genre || '').split(',').map((g: string) => (
                             <StyledGenrePill>{g}</StyledGenrePill>
                         ))}
                     </StyledWrappingRow>

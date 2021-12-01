@@ -4,6 +4,8 @@ import Favorites from "../Favorites";
 import Content from "../Content";
 import styled from 'styled-components';
 import SideNav from "../SideNav";
+import {Route, Routes} from "react-router-dom";
+import Details from "../Details";
 
 const StyledAppContainer = styled.div`
   display: flex;
@@ -48,7 +50,12 @@ export default function App() {
                 onItemClick={onSideNavItemClick}
             />
             <Content>
-                <Favorites /> 
+                <Routes>
+                    <Route path="/" element={<Favorites />} />
+                    <Route path="/favorites" element={<Favorites />} />
+                    {/*<Route path="/history" />*/}
+                    <Route path="/details/:id" element={<Details />} />
+                </Routes>
             </Content>
         </StyledAppContainer>
     );
