@@ -1,6 +1,6 @@
 import React, {createRef} from 'react';
 import styled from 'styled-components';
-import MaterialIcon from "../MaterialIcon/MaterialIcon";
+import MaterialIcon from "../MaterialIcon";
 
 const StyledHeaderContainer = styled.header`
   display: flex;

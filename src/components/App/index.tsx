@@ -1,8 +1,9 @@
-import React from 'react';
-import Header from '../Header/Header';
-import Favorites from "../Favorites/Favorites";
-import Content from "../Content/Content";
+import React, {useState} from 'react';
+import Header from '../Header';
+import Favorites from "../Favorites";
+import Content from "../Content";
 import styled from 'styled-components';
+import SideNav from "../SideNav";
 
 const StyledAppContainer = styled.div`
   display: flex;
@@ -16,20 +17,35 @@ const StyledAppContainer = styled.div`
 `;
 
 export default function App() {
+    const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+
     const onSearchClick = async (query: string) => {
         // @ts-ignore
         const searchResult = await window.api.search(query);
         console.log('search result', searchResult);
     }
     const onMenuClick = () => {
-        console.log('onMenuClick');
+        setIsSideNavOpen(true);
+        console.log('isSideNavOpen', isSideNavOpen);
     }
+    const onSideNavClose = () => {
+        setIsSideNavOpen(false);
+    }
+    const onSideNavItemClick = (target: string) => {
+        console.log('onSideNavItemClick', target);
+    }
+
     return (
         <StyledAppContainer>
             <Header
                 title={"Favorites"}
                 onSearchClick={onSearchClick}
                 onMenuClick={onMenuClick}
+            />
+            <SideNav
+                isOpen={isSideNavOpen}
+                onClose={onSideNavClose}
+                onItemClick={onSideNavItemClick}
             />
             <Content>
                 <Favorites /> 
