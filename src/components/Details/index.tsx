@@ -55,26 +55,21 @@ const StyledWrappingRow = styled(StyledRow)`
   flex-wrap: wrap;
 `;
 
-export default function Details(props: Partial<DetailsProps>) {
+export default function Details({ onPropsChange, ...props}: Partial<DetailsProps & EventProps>) {
     let {id}: Readonly<Params<"id">> = useParams();
 
     const [
-        {image, type, isFavorite, summary, status, genre, episodes},
+        {image, type, isFavorite, description, status, genre, episodes},
         setDetails
     ] = useState(props || {});
 
-    async function getDetails() {
-        if (id) {
-            const f = await window.api.getDetails(id);
-            console.log('f', f);
-            setDetails(f);
-        }
-    }
-
     useEffect(() => {
-        if (!props) {
-            console.log('getting details');
-            getDetails();
+        console.log('getting details');
+        if (id) {
+            window.api.getDetails(id).then(details => {
+                setDetails(details);
+                onPropsChange?.(details);
+            });
         }
     }, []);
 
@@ -91,10 +86,10 @@ export default function Details(props: Partial<DetailsProps>) {
                             star
                         </StyledCenteredMaterialIcon>
                     </StyledRow>
-                    <p id="description">{summary}</p>
+                    <p id="description">{description}</p>
                     <StyledWrappingRow id="genres">
-                        {(genre || '').split(',').map((g: string) => (
-                            <StyledGenrePill>{g}</StyledGenrePill>
+                        {(genre || '').split(',').map((g: string, index: number) => (
+                            <StyledGenrePill key={index}>{g}</StyledGenrePill>
                         ))}
                     </StyledWrappingRow>
                 </StyledInfoColumn>

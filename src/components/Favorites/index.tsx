@@ -39,11 +39,13 @@ const StyledFavoritesText = styled.span`
   padding: 4px 8px 8px;
 `;
 
-function FavoritesTile({id, imageUrl, displayName, description}: Partial<FavoritesTileProps>) {
+function FavoritesTile({id, imageUrl, displayName, description, onClick}: FavoritesTileProps) {
     return (
-        <StyledFavoritesTileContainer>
+        <StyledFavoritesTileContainer
+            onClick={onClick}
+        >
             <StyledFavoritesTile>
-                <StyledFavoritesImg src={imageUrl} />
+                <StyledFavoritesImg src={imageUrl}/>
                 <StyledFavoritesTitle>{displayName}</StyledFavoritesTitle>
                 <StyledFavoritesText>{description}</StyledFavoritesText>
             </StyledFavoritesTile>
@@ -51,29 +53,29 @@ function FavoritesTile({id, imageUrl, displayName, description}: Partial<Favorit
     );
 }
 
-export default function Favorites() {
+export default function Favorites({onPropsChange, onTileClick}: Partial<FavoritesProps & EventProps>) {
     const [favorites, setFavorites] = useState([] as FavoritesTileProps[]);
-
-    async function getFavorites() {
-        const f = await window.api.getFavorites();
-        console.log('f', f);
-        setFavorites(f);
-    }
 
     useEffect(() => {
         console.log('getting Favorites');
-        getFavorites();
+        window.api.getFavorites().then(f => {
+            // @ts-ignore
+            setFavorites(f);
+            onPropsChange?.(favorites);
+        });
     }, []);
 
     return (
         <StyledFavoritesContainer>
-            {favorites?.map((favorite, index) => (<FavoritesTile
-                id={favorite.id}
-                imageUrl={favorite.imageUrl}
-                displayName={favorite.displayName}
-                description={favorite.description.substr(0, 15)}
-                key={index}
-            />))}
+            {favorites?.map((favorite, index) => (
+                <FavoritesTile
+                    id={favorite.id}
+                    imageUrl={favorite.imageUrl}
+                    displayName={favorite.displayName}
+                    description={favorite.description.substr(0, 15)}
+                    key={index}
+                    onClick={() => onTileClick?.(favorite.id)}
+                />))}
         </StyledFavoritesContainer>
     );
 }

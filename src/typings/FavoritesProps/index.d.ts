@@ -3,8 +3,10 @@ interface FavoritesTileProps {
     imageUrl: string;
     displayName: string;
     description: string;
+    onClick: () => void;
 }
 
 interface FavoritesProps {
-    favorites: FavoritesTileProps[];
+    // favorites: FavoritesTileProps[];
+    onTileClick: (id: string) => void;
 }
