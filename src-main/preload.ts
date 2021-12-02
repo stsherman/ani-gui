@@ -1,12 +1,15 @@
 import { contextBridge } from "electron";
 import {getFavorites, getHistory} from "./modules/database";
+import GogoAnimeScraper from "./modules/scrapers/gogoanime";
+import './extensions/NodeList';
+import './extensions/Element';
 
 contextBridge.exposeInMainWorld(
     'api',
     new class implements Api {
         getFavorites = async () => await getFavorites();
         getHistory = async () => await getHistory();
-        // search: async (query) => await scraper.search(query),
-        getDetails = async (id: string | undefined) => {};
+        search = async (query: string) => await GogoAnimeScraper.search(query);
+        getDetails = async (id: string) => await GogoAnimeScraper.getDetails(id);
     }
 );

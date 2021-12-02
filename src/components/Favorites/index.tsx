@@ -67,11 +67,12 @@ export default function Favorites() {
 
     return (
         <StyledFavoritesContainer>
-            {favorites?.map(favorite => (<FavoritesTile
+            {favorites?.map((favorite, index) => (<FavoritesTile
                 id={favorite.id}
                 imageUrl={favorite.imageUrl}
                 displayName={favorite.displayName}
                 description={favorite.description.substr(0, 15)}
+                key={index}
             />))}
         </StyledFavoritesContainer>
     );

@@ -64,17 +64,19 @@ export default function Details(props: Partial<DetailsProps>) {
     ] = useState(props || {});
 
     async function getDetails() {
-        const f = await window.api.getDetails(id);
-        console.log('f', f);
-        setDetails(f);
+        if (id) {
+            const f = await window.api.getDetails(id);
+            console.log('f', f);
+            setDetails(f);
+        }
     }
 
-    if (!props) {
-        useEffect(() => {
+    useEffect(() => {
+        if (!props) {
             console.log('getting details');
             getDetails();
-        }, []);
-    }
+        }
+    }, []);
 
     return (
         <StyledDetailsContainer>
@@ -91,7 +93,7 @@ export default function Details(props: Partial<DetailsProps>) {
                     </StyledRow>
                     <p id="description">{summary}</p>
                     <StyledWrappingRow id="genres">
-                        {...(genre || '').split(',').map((g: string) => (
+                        {(genre || '').split(',').map((g: string) => (
                             <StyledGenrePill>{g}</StyledGenrePill>
                         ))}
                     </StyledWrappingRow>
