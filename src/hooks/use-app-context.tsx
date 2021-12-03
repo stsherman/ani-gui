@@ -7,7 +7,7 @@ export function AppProvider({ initialState, ...props }: { initialState?: AppStat
     const [appState, setAppState] = useState<AppState>(initialState ? initialState : {
         isLoaderShowing: false,
         isSideNavOpen: false,
-        title: "Favorites",
+        title: undefined,
     });
 
     return <AppContext.Provider

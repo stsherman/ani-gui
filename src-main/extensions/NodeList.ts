@@ -16,4 +16,6 @@ NodeList.prototype.reduce = function <U, T extends Node>(callbackfn: (previousVa
     return result;
 }
 
-export default {};
+const module = {};
+
+export default module;

@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import useAppContext from "../hooks/use-app-context";
-import {toFavoritesProps} from "../mappers/favorites";
 import {toHistoryProps} from "../mappers/history";
 
-const StyledFavoritesContainer = styled.div`
+const StyledHistoryContainer = styled.div`
   display: flex;
 `;
 
-const StyledFavoritesTileContainer = styled.div`
+const StyledHistoryTileContainer = styled.div`
   padding: 2px;
 
   &:hover {
@@ -17,7 +16,7 @@ const StyledFavoritesTileContainer = styled.div`
   }
 `;
 
-const StyledFavoritesTile = styled.div`
+const StyledHistoryTile = styled.div`
   display: flex;
   flex-direction: column;
   width: 180px;
@@ -25,66 +24,65 @@ const StyledFavoritesTile = styled.div`
   cursor: pointer;
 `;
 
-const StyledFavoritesImg = styled.img`
+const StyledHistoryImg = styled.img`
   width: 180px;
   height: 232px;
   object-fit: cover;
 `;
 
-const StyledFavoritesTitle = styled.span`
+const StyledHistoryTitle = styled.span`
   font-size: 14px;
   font-weight: bold;
   padding: 8px 8px 4px;
 `;
 
-const StyledFavoritesText = styled.span`
+const StyledHistoryText = styled.span`
   font-size: 12px;
   padding: 4px 8px 8px;
 `;
 
-function FavoritesTile({id, imageUrl, displayName, description, onClick}: FavoritesTileProps) {
+function HistoryTile({id, imageUrl, displayName, description, onClick}: HistoryTileProps) {
     return (
-        <StyledFavoritesTileContainer
+        <StyledHistoryTileContainer
             onClick={onClick}
         >
-            <StyledFavoritesTile>
-                <StyledFavoritesImg src={imageUrl}/>
-                <StyledFavoritesTitle>{displayName}</StyledFavoritesTitle>
-                <StyledFavoritesText>{description}</StyledFavoritesText>
-            </StyledFavoritesTile>
-        </StyledFavoritesTileContainer>
+            <StyledHistoryTile>
+                <StyledHistoryImg src={imageUrl}/>
+                <StyledHistoryTitle>{displayName}</StyledHistoryTitle>
+                <StyledHistoryText>{description}</StyledHistoryText>
+            </StyledHistoryTile>
+        </StyledHistoryTileContainer>
     );
 }
 
-export default function Favorites({onTileClick}: Partial<FavoritesProps>) {
+export default function History({onTileClick}: Partial<HistoryProps>) {
     const [appState, setAppState] = useAppContext();
-    const [favorites, setFavorites] = useState([] as FavoritesTileProps[]);
+    const [history, setHistory] = useState([] as HistoryTileProps[]);
 
     useEffect(() => {
         if (appState.isLoaderShowing) {
-            console.log('getting Favorites');
-            window.api.getFavorites().then(f => {
-                setFavorites(toFavoritesProps(f));
+            console.log('getting History');
+            window.api.getHistory().then(f => {
+                setHistory(toHistoryProps(f));
                 setAppState({
                     ...appState,
-                    isLoaderShowing: false,
-                    title: "Favorites"
+                    isLoaderShowing: false
                 });
             });
-        } else if (appState.title !== "Favorites") {
+        } else if (appState.title !== "History") {
             setAppState({
                 ...appState,
                 isLoaderShowing: true,
-                title: "Favorites"
+                title: "History"
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.title, appState.isLoaderShowing]);
 
     return (
-        <StyledFavoritesContainer>
-            {favorites?.map((favorite, index) => (
-                <FavoritesTile
+        <StyledHistoryContainer>
+            {history?.map((favorite, index) => (
+                <HistoryTile
                     id={favorite.id}
                     imageUrl={favorite.imageUrl}
                     displayName={favorite.displayName}
@@ -92,6 +90,6 @@ export default function Favorites({onTileClick}: Partial<FavoritesProps>) {
                     key={index}
                     onClick={() => onTileClick?.(favorite.id)}
                 />))}
-        </StyledFavoritesContainer>
+        </StyledHistoryContainer>
     );
 }

@@ -4,6 +4,8 @@ import MaterialIcon from "./material-icon";
 import {Params, useParams} from "react-router-dom";
 import useAppContext from "../hooks/use-app-context";
 import useDetailsContext from "../hooks/use-details-context";
+import {toDetailsState} from "../mappers/details";
+import {toHistoryProps} from "../mappers/history";
 
 const StyledDetailsContainer = styled.div`
   display: flex;
@@ -65,31 +67,26 @@ export default function Details() {
 
     useEffect(() => {
         if (id) {
-            console.log('getting details');
-            setAppState({
-                ...appState,
-                isLoaderShowing: true
-            });
-            window.api.getDetails(id).then(getDetailsResponse => {
-                setDetails({
-                    description: getDetailsResponse.description,
-                    episodes: getDetailsResponse.episodes,
-                    genres: getDetailsResponse.genre.split(","),
-                    imageSrc: getDetailsResponse.image,
-                    isFavorite: getDetailsResponse.isFavorite,
-                    status: getDetailsResponse.status,
-                    title: getDetailsResponse.title,
-                    type: getDetailsResponse.type,
+            if (appState.isLoaderShowing) {
+                console.log('getting Details');
+                window.api.getDetails(id).then(getDetailsResponse => {
+                    setDetails(toDetailsState(getDetailsResponse));
+                    setAppState({
+                        ...appState,
+                        title: getDetailsResponse.title,
+                        isLoaderShowing: false
+                    });
                 });
+            } else if (!details || appState.title !== details.title) {
                 setAppState({
                     ...appState,
-                    title: getDetailsResponse.title,
-                    isLoaderShowing: false
+                    isLoaderShowing: true,
+                    title: undefined
                 });
-            });
+            }
         }
-        // eslint-disable-next-line
-    }, [id]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, appState.title, appState.isLoaderShowing]);
 
     return (
         <>

@@ -40,7 +40,7 @@ export namespace GogoAnimeScraper {
                         id: link.href.substring(link.href.lastIndexOf('/') + 1),
                         image: li.querySelectorRequired<HTMLImageElement>('img').src,
                         name: link.innerText,
-                    } as SearchResponseItem;
+                    };
                 }) as SearchResponse;
             })
     }

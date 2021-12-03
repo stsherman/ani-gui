@@ -9,12 +9,8 @@ interface GetDetailsResponse extends Record<string, string | any[] | boolean> {
     type: string;
 }
 
-interface SearchResponseItem {
+interface SearchResponse extends ArrayLike<{
     id: string;
     image: string;
     name: string;
-}
-
-interface SearchResponse extends ArrayLike<SearchResponseItem> {
-
-}
+}> {}

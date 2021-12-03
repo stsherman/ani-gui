@@ -1,4 +1,4 @@
-interface FavoritesTileProps {
+interface HistoryTileProps {
     id: string;
     imageUrl: string;
     displayName: string;
@@ -6,7 +6,7 @@ interface FavoritesTileProps {
     onClick?: () => void;
 }
 
-interface FavoritesProps {
-    // favorites: FavoritesTileProps[];
+interface HistoryProps {
+    // history: HistoryTileProps[];
     onTileClick: (id: string) => void;
 }

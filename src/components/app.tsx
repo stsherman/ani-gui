@@ -9,6 +9,7 @@ import Details from "./details";
 import useAppContext from "../hooks/use-app-context";
 import {DetailsProvider} from "../hooks/use-details-context";
 import Loader from "./loader";
+import History from "./history";
 
 const StyledAppContainer = styled.div`
   display: flex;
@@ -38,7 +39,8 @@ export default function App() {
         setAppState({ ...appState, isSideNavOpen: false });
     }
 
-    const onFavoritesClick = (id: string) => navigate(`/details/${id}`, { replace: true });
+    const onFavoritesTileClick = (id: string) => navigate(`/details/${id}`, { replace: true });
+    const onHistoryTileClick = (id: string) => navigate(`/details/${id}`, { replace: true });
 
     return (
         <StyledAppContainer>
@@ -53,9 +55,9 @@ export default function App() {
             />
             <Content>
                 <Routes>
-                    <Route path="/" element={<Favorites onTileClick={onFavoritesClick} />} />
-                    <Route path="/favorites" element={<Favorites onTileClick={onFavoritesClick} />} />
-                    {/*<Route path="/history" />*/}
+                    <Route path="/" element={<Favorites onTileClick={onFavoritesTileClick} />} />
+                    <Route path="/favorites" element={<Favorites onTileClick={onFavoritesTileClick} />} />
+                    <Route path="/history" element={<History onTileClick={onHistoryTileClick} />} />
                     <Route path="/details/:id" element={<DetailsProvider><Details /></DetailsProvider>} />
                 </Routes>
             </Content>

@@ -30,7 +30,7 @@
     "dist:mac": "react-app-rewired build && npx tsc --project tsconfig.main.json && electron-builder -m -c.extraMetadata.main=build/main.js",
     "dist:linux": "react-app-rewired build && npx tsc --project tsconfig.main.json && electron-builder -l -c.extraMetadata.main=build/main.js",
     "fix:electron": "npx electron-fix start",
-    "lint": "eslint . --ext .js --ext .json --ext .ts --ext .tsx"
+    "lint": "eslint . --ext .ts --ext .tsx"
   },
   "eslintConfig": {
     "extends": "react-app"
