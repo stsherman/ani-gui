@@ -1,3 +1,5 @@
+**Note: This is a work in progress and does not currently stream anything**
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) using [cra-template-typescript-electron](https://github.com/vixalie/cra-template-typescript-electron) template.
