@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styled, {css} from "styled-components";
+import useAppContext from "../hooks/use-app-context";
 
 const StyledSideNavContainer = styled.div`
   position: absolute;
@@ -36,7 +37,13 @@ const StyledSideNavLi = styled.li`
   cursor: pointer;
 `;
 
-export default function SideNav({isOpen, onClose, onItemClick}: SideNavProps) {
+export default function SideNav({isOpen, onItemClick}: SideNavProps) {
+    const [appState, setAppState] = useAppContext();
+
+    const closeSideNav = () => {
+        setAppState({ ...appState, isSideNavOpen: false });
+    };
+
     return (
         <StyledSideNavContainer isOpen={isOpen} >
             <StyledSideNavContent>
@@ -49,7 +56,7 @@ export default function SideNav({isOpen, onClose, onItemClick}: SideNavProps) {
                     </StyledSideNavLi>
                 </ul>
             </StyledSideNavContent>
-            <StyledSideNavBackground onClick={onClose} isOpen={isOpen} />
+            <StyledSideNavBackground onClick={closeSideNav} isOpen={isOpen} />
         </StyledSideNavContainer>
     );
 }

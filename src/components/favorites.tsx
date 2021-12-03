@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+import useAppContext from "../hooks/use-app-context";
 
 const StyledFavoritesContainer = styled.div`
   display: flex;
@@ -53,15 +54,16 @@ function FavoritesTile({id, imageUrl, displayName, description, onClick}: Favori
     );
 }
 
-export default function Favorites({onPropsChange, onTileClick}: Partial<FavoritesProps & EventProps>) {
+export default function Favorites({onTileClick}: Partial<FavoritesProps>) {
+    const [appState, setAppState] = useAppContext();
     const [favorites, setFavorites] = useState([] as FavoritesTileProps[]);
 
     useEffect(() => {
         console.log('getting Favorites');
+        setAppState({ ...appState, title: "Favorites" });
         window.api.getFavorites().then(f => {
             // @ts-ignore
             setFavorites(f);
-            onPropsChange?.(favorites);
         });
     }, []);
 

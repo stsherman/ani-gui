@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import MaterialIcon from "../MaterialIcon";
+import MaterialIcon from "./material-icon";
 import {Params, useParams} from "react-router-dom";
+import useAppContext from "../hooks/use-app-context";
+import useDetailsContext from "../hooks/use-details-context";
 
 const StyledDetailsContainer = styled.div`
   display: flex;
@@ -55,20 +57,27 @@ const StyledWrappingRow = styled(StyledRow)`
   flex-wrap: wrap;
 `;
 
-export default function Details({ onPropsChange, ...props}: Partial<DetailsProps & EventProps>) {
+export default function Details() {
+    const [appState, setAppState] = useAppContext();
     let {id}: Readonly<Params<"id">> = useParams();
 
-    const [
-        {image, type, isFavorite, description, status, genre, episodes},
-        setDetails
-    ] = useState(props || {});
+    const [details, setDetails] = useDetailsContext();
 
     useEffect(() => {
-        console.log('getting details');
         if (id) {
-            window.api.getDetails(id).then(details => {
-                setDetails(details);
-                onPropsChange?.(details);
+            console.log('getting details');
+            window.api.getDetails(id).then(getDetailsResponse => {
+                setDetails({
+                    description: getDetailsResponse.description,
+                    episodes: getDetailsResponse.episodes,
+                    genres: getDetailsResponse.genre.split(","),
+                    imageSrc: getDetailsResponse.image,
+                    isFavorite: getDetailsResponse.isFavorite,
+                    status: getDetailsResponse.status,
+                    title: getDetailsResponse.title,
+                    type: getDetailsResponse.type,
+                });
+                setAppState({ ...appState, title: getDetailsResponse.title })
             });
         }
     }, []);
@@ -76,19 +85,19 @@ export default function Details({ onPropsChange, ...props}: Partial<DetailsProps
     return (
         <StyledDetailsContainer>
             <StyledRow>
-                <StyledDetailsImage src={image} />
+                <StyledDetailsImage src={details.imageSrc} />
                 <StyledInfoColumn>
                     <StyledRow>
-                        <StyledPill id="status">{status}</StyledPill>
-                        <StyledPill id="type">{type}</StyledPill>
+                        <StyledPill id="status">{details.status}</StyledPill>
+                        <StyledPill id="type">{details.type}</StyledPill>
                         <StyledSpacer />
-                        <StyledCenteredMaterialIcon style={{color: isFavorite ? '#ffd500' : '#FFFFFF'}}>
+                        <StyledCenteredMaterialIcon style={{color: details.isFavorite ? '#ffd500' : '#FFFFFF'}}>
                             star
                         </StyledCenteredMaterialIcon>
                     </StyledRow>
-                    <p id="description">{description}</p>
+                    <p id="description">{details.description}</p>
                     <StyledWrappingRow id="genres">
-                        {(genre || '').split(',').map((g: string, index: number) => (
+                        {details.genres.map((g: string, index: number) => (
                             <StyledGenrePill key={index}>{g}</StyledGenrePill>
                         ))}
                     </StyledWrappingRow>
@@ -96,7 +105,7 @@ export default function Details({ onPropsChange, ...props}: Partial<DetailsProps
             </StyledRow>
             <StyledRow>
                 <label>Episodes:</label>
-                <span>{JSON.stringify(episodes)}</span>
+                <span>{JSON.stringify(details.episodes)}</span>
             </StyledRow>
         </StyledDetailsContainer>
     );

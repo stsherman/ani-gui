@@ -1,6 +1,5 @@
 interface SideNavProps {
     isOpen: boolean;
-    onClose: () => void;
     onItemClick: (target: string) => void;
 }
 
