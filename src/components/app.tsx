@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Header from './header';
 import Favorites from "./favorites";
 import Content from "./content";
@@ -8,6 +8,7 @@ import {Route, Routes, useNavigate} from "react-router-dom";
 import Details from "./details";
 import useAppContext from "../hooks/use-app-context";
 import {DetailsProvider} from "../hooks/use-details-context";
+import Loader from "./loader";
 
 const StyledAppContainer = styled.div`
   display: flex;
@@ -58,6 +59,7 @@ export default function App() {
                     <Route path="/details/:id" element={<DetailsProvider><Details /></DetailsProvider>} />
                 </Routes>
             </Content>
+            <Loader isShown={appState.isLoaderShowing} />
         </StyledAppContainer>
     );
 }

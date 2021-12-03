@@ -60,11 +60,20 @@ export default function Favorites({onTileClick}: Partial<FavoritesProps>) {
 
     useEffect(() => {
         console.log('getting Favorites');
-        setAppState({ ...appState, title: "Favorites" });
+        setAppState({
+            ...appState,
+            isLoaderShowing: true,
+            title: "Favorites"
+        });
         window.api.getFavorites().then(f => {
             // @ts-ignore
             setFavorites(f);
+            setAppState({
+                ...appState,
+                isLoaderShowing: false,
+            });
         });
+        // eslint-disable-next-line
     }, []);
 
     return (

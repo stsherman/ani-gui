@@ -57,7 +57,7 @@ export default function Header({title, onSearchClick, onMenuClick}: Partial<Head
             <StyledHeaderTitle>{title}</StyledHeaderTitle>
             <StyledHeaderSearchContainer>
                 <StyledHeaderSearchInput type="text" placeholder="Search anime" ref={inputRef}/>
-                <StyledMaterialIcon>search</StyledMaterialIcon>
+                <StyledMaterialIcon onClick={triggerSearch}>search</StyledMaterialIcon>
             </StyledHeaderSearchContainer>
         </StyledHeaderContainer>
     );

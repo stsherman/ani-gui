@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import MaterialIcon from "./material-icon";
 import {Params, useParams} from "react-router-dom";
@@ -66,6 +66,10 @@ export default function Details() {
     useEffect(() => {
         if (id) {
             console.log('getting details');
+            setAppState({
+                ...appState,
+                isLoaderShowing: true
+            });
             window.api.getDetails(id).then(getDetailsResponse => {
                 setDetails({
                     description: getDetailsResponse.description,
@@ -77,36 +81,43 @@ export default function Details() {
                     title: getDetailsResponse.title,
                     type: getDetailsResponse.type,
                 });
-                setAppState({ ...appState, title: getDetailsResponse.title })
+                setAppState({
+                    ...appState,
+                    title: getDetailsResponse.title,
+                    isLoaderShowing: false
+                });
             });
         }
-    }, []);
+        // eslint-disable-next-line
+    }, [id]);
 
     return (
-        <StyledDetailsContainer>
-            <StyledRow>
-                <StyledDetailsImage src={details.imageSrc} />
-                <StyledInfoColumn>
-                    <StyledRow>
-                        <StyledPill id="status">{details.status}</StyledPill>
-                        <StyledPill id="type">{details.type}</StyledPill>
-                        <StyledSpacer />
-                        <StyledCenteredMaterialIcon style={{color: details.isFavorite ? '#ffd500' : '#FFFFFF'}}>
-                            star
-                        </StyledCenteredMaterialIcon>
-                    </StyledRow>
-                    <p id="description">{details.description}</p>
-                    <StyledWrappingRow id="genres">
-                        {details.genres.map((g: string, index: number) => (
-                            <StyledGenrePill key={index}>{g}</StyledGenrePill>
-                        ))}
-                    </StyledWrappingRow>
-                </StyledInfoColumn>
-            </StyledRow>
-            <StyledRow>
-                <label>Episodes:</label>
-                <span>{JSON.stringify(details.episodes)}</span>
-            </StyledRow>
-        </StyledDetailsContainer>
+        <>
+            {details && <StyledDetailsContainer>
+                <StyledRow>
+                    <StyledDetailsImage src={details.imageSrc} />
+                    <StyledInfoColumn>
+                        <StyledRow>
+                            <StyledPill id="status">{details.status}</StyledPill>
+                            <StyledPill id="type">{details.type}</StyledPill>
+                            <StyledSpacer />
+                            <StyledCenteredMaterialIcon style={{color: details.isFavorite ? '#ffd500' : '#FFFFFF'}}>
+                                star
+                            </StyledCenteredMaterialIcon>
+                        </StyledRow>
+                        <p id="description">{details.description}</p>
+                        <StyledWrappingRow id="genres">
+                            {details.genres.map((g: string, index: number) => (
+                                <StyledGenrePill key={index}>{g}</StyledGenrePill>
+                            ))}
+                        </StyledWrappingRow>
+                    </StyledInfoColumn>
+                </StyledRow>
+                <StyledRow>
+                    <label>Episodes:</label>
+                    <span>{JSON.stringify(details.episodes)}</span>
+                </StyledRow>
+            </StyledDetailsContainer>}
+        </>
     );
 }
