@@ -1,0 +1,3 @@
+interface Favorite {
+    animeId: string;
+}
