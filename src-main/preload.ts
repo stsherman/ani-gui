@@ -7,7 +7,7 @@ import './extensions/Element';
 class Backend implements Api {
     getFavorites = async () => await getFavorites();
     getHistory = async () => await getHistory();
-    search = async (query: string | undefined) => await GogoAnimeScraper.search(query);
+    search = async (keyword: string | undefined, page?: number) => await GogoAnimeScraper.search(keyword, page);
     getDetails = async (id: string | undefined) => await GogoAnimeScraper.getDetails(id);
 }
 

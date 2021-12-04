@@ -26,21 +26,31 @@ export namespace GogoAnimeScraper {
             });
     }
 
-    export async function search(query: string | undefined): Promise<SearchResponse> {
-        if (!query) return [];
-        return await get('https://gogoanime.wiki/search.html', {'keyword': query})
+    export async function search(keyword: string | undefined, page?: number): Promise<SearchResponse> {
+        if (!keyword || keyword.length < 2) return { searchResults: [], currentPage: 0 };
+        return await get('https://gogoanime.wiki/search.html', {keyword, page: `${page || 1}`})
             .then(x => x.text())
             .then(x => {
                 const doc = document.createElement('template');
                 doc.innerHTML = x;
-                return doc.content.querySelectorAll<HTMLLIElement>('.items li').map((li: HTMLLIElement) => {
-                    const link = li.querySelectorRequired<HTMLAnchorElement>('.name a');
-                    return {
-                        id: link.href.substring(link.href.lastIndexOf('/') + 1),
-                        image: li.querySelectorRequired<HTMLImageElement>('img').src,
-                        name: link.innerText,
-                    };
-                }) as SearchResponse;
+                const paginationElements = doc.content.querySelectorAll<HTMLLIElement>('ul.pagination-list li');
+                const currentPageIndex = paginationElements.findIndex<HTMLLIElement>((li) => li.classList.contains('selected'));
+                const currentPage = Number(paginationElements[currentPageIndex].textContent);
+                const previousPage = currentPageIndex > 0 ? Number(paginationElements[currentPageIndex - 1].textContent) : undefined;
+                const nextPage = currentPageIndex < paginationElements.length - 1 ? Number(paginationElements[currentPageIndex + 1].textContent) : undefined;
+                return {
+                    currentPage: currentPage,
+                    previousPage: previousPage,
+                    nextPage: nextPage,
+                    searchResults: doc.content.querySelectorAll<HTMLLIElement>('.items li').map((li: HTMLLIElement) => {
+                        const link = li.querySelectorRequired<HTMLAnchorElement>('.name a');
+                        return {
+                            id: link.href.substring(link.href.lastIndexOf('/') + 1),
+                            image: li.querySelectorRequired<HTMLImageElement>('img').src,
+                            name: link.innerText,
+                        };
+                    })
+                };
             })
     }
 }

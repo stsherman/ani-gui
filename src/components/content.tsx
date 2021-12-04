@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const StyledContentContainer = styled.div`
   height: 100%;
   overflow: auto;
-  margin-top: 8px;
+  margin-top: 16px;
   
   &::-webkit-scrollbar {
     width: 4px;

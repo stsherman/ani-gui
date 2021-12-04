@@ -1,3 +1,5 @@
+import ArrayLike = jasmine.ArrayLike;
+
 interface GetDetailsResponse extends Record<string, string | any[] | boolean> {
     description: string;
     episodes: any[];
@@ -9,8 +11,15 @@ interface GetDetailsResponse extends Record<string, string | any[] | boolean> {
     type: string;
 }
 
-interface SearchResponse extends ArrayLike<{
+interface SearchResult {
     id: string;
     image: string;
     name: string;
-}> {}
+}
+
+interface SearchResponse {
+    searchResults: ArrayLike<SearchResult>,
+    currentPage: number;
+    previousPage?: number;
+    nextPage?: number;
+}

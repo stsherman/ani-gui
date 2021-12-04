@@ -12,6 +12,7 @@ export default function usePromise<T>(promiseGenerator: () => PromiseLike<T>, de
 
     useEffect(() => {
         if (componentIsMounted.current) {
+            setPromiseResult(undefined);
             promiseGenerator().then((result: T) => {
                 if (componentIsMounted.current) {
                     setPromiseResult(result);

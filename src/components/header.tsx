@@ -46,8 +46,11 @@ const StyledMaterialIcon = styled(MaterialIcon)`
 export default function Header({title, onSearchClick, onMenuClick}: Partial<HeaderProps>) {
     const inputRef = createRef<HTMLInputElement>();
     const triggerSearch = () => {
-        const query = inputRef.current?.value;
-        if (query) onSearchClick?.(query);
+        if (inputRef.current) {
+            const query = inputRef.current.value;
+            if (query) onSearchClick?.(query);
+            inputRef.current.value = '';
+        }
     }
     const onKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         switch (event.key) {
