@@ -5,7 +5,7 @@ import Breakpoints from "../constants/breakpoints";
 const StyledTileContainer = styled.div`
   padding: 2px;
   flex-basis: calc(33.3% - 8px);  
-  margin: 4px;
+  margin: 0 4px 8px;
   
   &:hover {
     border: 2px solid #FFFFFF;

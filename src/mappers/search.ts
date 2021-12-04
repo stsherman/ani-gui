@@ -1,20 +1,22 @@
-export function toTileProps(searchResponse: SearchResponse): TileProps[] {
+export function toTileProps({ searchResults }: SearchResponse): TileProps[] {
     const tileProps = [];
-    for (let i = 0; i < searchResponse.searchResults.length; i++) {
+    for (let i = 0; i < searchResults.length; i++) {
         tileProps.push({
-            id: searchResponse.searchResults[i].id,
-            imageUrl: searchResponse.searchResults[i].image,
-            displayName: searchResponse.searchResults[i].name,
+            id: searchResults[i].id,
+            imageUrl: searchResults[i].image,
+            displayName: searchResults[i].name,
             description: "",
         });
     }
     return tileProps;
 }
 
-export function toPaginationProps(searchResponse: SearchResponse): PaginationProps {
-    return {
-        currentPage: searchResponse.currentPage,
-        previousPage: searchResponse.previousPage,
-        nextPage: searchResponse.nextPage
-    };
+export function toPaginationProps({ pagination }: SearchResponse): PaginationProps {
+    const paginationProps = [];
+
+    for (let i = pagination.min; i <= pagination.max; i++) {
+        paginationProps.push(i);
+    }
+    
+    return paginationProps;
 }

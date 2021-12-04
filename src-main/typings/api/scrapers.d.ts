@@ -19,7 +19,8 @@ interface SearchResult {
 
 interface SearchResponse {
     searchResults: ArrayLike<SearchResult>,
-    currentPage: number;
-    previousPage?: number;
-    nextPage?: number;
+    pagination: {
+        min: number,
+        max: number
+    }
 }

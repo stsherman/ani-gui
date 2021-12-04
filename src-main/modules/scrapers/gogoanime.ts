@@ -27,21 +27,19 @@ export namespace GogoAnimeScraper {
     }
 
     export async function search(keyword: string | undefined, page?: number): Promise<SearchResponse> {
-        if (!keyword || keyword.length < 2) return { searchResults: [], currentPage: 0 };
+        if (!keyword || keyword.length < 2) return { searchResults: [], pagination: { max: 0, min: 0 } };
         return await get('https://gogoanime.wiki/search.html', {keyword, page: `${page || 1}`})
             .then(x => x.text())
             .then(x => {
                 const doc = document.createElement('template');
                 doc.innerHTML = x;
-                const paginationElements = doc.content.querySelectorAll<HTMLLIElement>('ul.pagination-list li');
-                const currentPageIndex = paginationElements.findIndex<HTMLLIElement>((li) => li.classList.contains('selected'));
-                const currentPage = Number(paginationElements[currentPageIndex].textContent);
-                const previousPage = currentPageIndex > 0 ? Number(paginationElements[currentPageIndex - 1].textContent) : undefined;
-                const nextPage = currentPageIndex < paginationElements.length - 1 ? Number(paginationElements[currentPageIndex + 1].textContent) : undefined;
+                const pages = doc.content.querySelectorAll<HTMLLIElement>('ul.pagination-list li')
+                    .map((li: HTMLLIElement) => Number(li.textContent));
                 return {
-                    currentPage: currentPage,
-                    previousPage: previousPage,
-                    nextPage: nextPage,
+                    pagination: {
+                        min: pages.first() || 1,
+                        max: pages.last() || 1
+                    },
                     searchResults: doc.content.querySelectorAll<HTMLLIElement>('.items li').map((li: HTMLLIElement) => {
                         const link = li.querySelectorRequired<HTMLAnchorElement>('.name a');
                         return {

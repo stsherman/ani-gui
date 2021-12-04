@@ -12,13 +12,13 @@ const StyledSearchResultsContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 `;
 
 const StyledSearchResultTilesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   overflow: auto;
-  height: 100%;
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -35,12 +35,27 @@ const StyledSearchResultPagination = styled.div`
   align-items: center;
   justify-content: center;
   margin: 16px 0 0;
+
   & > * {
-    margin-left: 8px;
+    border-radius: 4px;
+    padding: 4px 8px;
   }
-  & > [class*=material-icons]:not([disabled]) {
+  
+  & > [class*=material-icons] {
+    padding: 2px 0;
+  }
+
+  & > *:not([disabled]) {
     cursor: pointer;
+    &:hover {
+      background: #4b4b4b;
+    }
   }
+
+  && > [class*=selected] {
+    background: #525252;
+  }
+
   & > [class*=material-icons][disabled] {
     color: grey;
   }
@@ -54,12 +69,6 @@ export default function SearchResults({onTileClick}: SearchResultsProps) {
         pagination: toPaginationProps(searchResponse)
     })), [query, page]);
     useShowLoader(searchResponse, () => ({ title: `Search: ${query}` }));
-
-    const onPaginationClick = (page: number | undefined) => {
-        if (page) {
-            setPage(page);
-        }
-    }
 
     return (
         <>
@@ -77,15 +86,21 @@ export default function SearchResults({onTileClick}: SearchResultsProps) {
                 </StyledSearchResultTilesContainer>
                 <StyledSearchResultPagination>
                     <MaterialIcon
-                        disabled={!searchResponse.pagination.previousPage}
-                        onClick={() => onPaginationClick(searchResponse.pagination.previousPage)}
+                        disabled={page === 1}
+                        onClick={() => setPage(page - 1)}
                     >
                         navigate_before
                     </MaterialIcon>
-                    <span>{searchResponse.pagination.currentPage}</span>
+                    {searchResponse.pagination.map((pageNumber: number, index: number) =>
+                        <span
+                            key={index}
+                            className={pageNumber === page ? 'selected' : ''}
+                            onClick={() => setPage(pageNumber)}>{pageNumber}
+                        </span>
+                    )}
                     <MaterialIcon
-                        disabled={!searchResponse.pagination.nextPage}
-                        onClick={() => onPaginationClick(searchResponse.pagination.nextPage)}
+                        disabled={page === searchResponse.pagination[searchResponse.pagination.length - 1]}
+                        onClick={() => setPage(page + 1)}
                     >
                         navigate_next
                     </MaterialIcon>

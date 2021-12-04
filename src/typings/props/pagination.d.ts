@@ -1,5 +1,1 @@
-interface PaginationProps {
-    currentPage: number;
-    previousPage?: number;
-    nextPage?: number;
-}
+interface PaginationProps extends Array<number>{}

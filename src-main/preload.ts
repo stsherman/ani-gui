@@ -1,8 +1,9 @@
 import { contextBridge } from "electron";
 import {getFavorites, getHistory} from "./modules/database";
 import GogoAnimeScraper from "./modules/scrapers/gogoanime";
-import './extensions/NodeList';
-import './extensions/Element';
+import './extensions/node-list';
+import './extensions/element';
+import './extensions/array';
 
 class Backend implements Api {
     getFavorites = async () => await getFavorites();
