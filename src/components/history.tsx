@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import useAppContext from "../hooks/use-app-context";
 import {toHistoryProps} from "../mappers/history";
+import usePromise from "../hooks/use-promise";
+import useShowLoader from "../hooks/use-show-loader";
 
 const StyledHistoryContainer = styled.div`
   display: flex;
@@ -56,28 +57,8 @@ function HistoryTile({id, imageUrl, displayName, description, onClick}: HistoryT
 }
 
 export default function History({onTileClick}: Partial<HistoryProps>) {
-    const [appState, setAppState] = useAppContext();
-    const [history, setHistory] = useState([] as HistoryTileProps[]);
-
-    useEffect(() => {
-        if (appState.isLoaderShowing) {
-            console.log('getting History');
-            window.api.getHistory().then(f => {
-                setHistory(toHistoryProps(f));
-                setAppState({
-                    ...appState,
-                    isLoaderShowing: false
-                });
-            });
-        } else if (appState.title !== "History") {
-            setAppState({
-                ...appState,
-                isLoaderShowing: true,
-                title: "History"
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.title, appState.isLoaderShowing]);
+    const history = usePromise(() => window.api.getHistory().then(toHistoryProps));
+    useShowLoader(history, () => ({ title: "History" }));
 
     return (
         <StyledHistoryContainer>

@@ -1,8 +1,8 @@
 import {get} from "../http";
 
 export namespace GogoAnimeScraper {
-    export async function getDetails(id: string): Promise<GetDetailsResponse> {
-        return await get(`https://gogoanime.wiki/category/${id}`)
+    export async function getDetails(id: string | undefined): Promise<GetDetailsResponse> {
+        return !id ? {} as GetDetailsResponse : await get(`https://gogoanime.wiki/category/${id}`)
             .then(x => x.text())
             .then(x => {
                 const doc = document.createElement('template');
@@ -23,7 +23,6 @@ export namespace GogoAnimeScraper {
                     episodes: doc.content.querySelectorAll<HTMLLIElement>('#episode_page li')
                         .map((li: HTMLLIElement) => li.textContent?.trim())
                 } as GetDetailsResponse;
-
             });
     }
 

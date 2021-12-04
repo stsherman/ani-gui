@@ -1,6 +1,6 @@
 import {createContext, Dispatch, ProviderProps, SetStateAction, useContext, useState} from "react";
 
-type AppContextType = [AppState, Dispatch<SetStateAction<AppState>>] | undefined;
+type AppContextType = [AppState, Dispatch<SetStateAction<AppState>>, (updateValues: Partial<AppState>) => void] | undefined;
 const AppContext = createContext<AppContextType>(undefined);
 
 export function AppProvider({ initialState, ...props }: { initialState?: AppState } & Partial<ProviderProps<AppContextType>>) {
@@ -10,8 +10,15 @@ export function AppProvider({ initialState, ...props }: { initialState?: AppStat
         title: undefined,
     });
 
+    const updateAppState = (updateValues: Partial<AppState>) => {
+        setAppState({
+            ...(appState || {}),
+            ...updateValues
+        });
+    };
+
     return <AppContext.Provider
-        value={[appState, setAppState]}
+        value={[appState, setAppState, updateAppState]}
         {...props}
     />;
 }

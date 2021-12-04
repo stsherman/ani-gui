@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import useAppContext from "../hooks/use-app-context";
 import {toFavoritesProps} from "../mappers/favorites";
-import {toHistoryProps} from "../mappers/history";
+import usePromise from "../hooks/use-promise";
+import useShowLoader from "../hooks/use-show-loader";
 
 const StyledFavoritesContainer = styled.div`
   display: flex;
@@ -57,29 +57,8 @@ function FavoritesTile({id, imageUrl, displayName, description, onClick}: Favori
 }
 
 export default function Favorites({onTileClick}: Partial<FavoritesProps>) {
-    const [appState, setAppState] = useAppContext();
-    const [favorites, setFavorites] = useState([] as FavoritesTileProps[]);
-
-    useEffect(() => {
-        if (appState.isLoaderShowing) {
-            console.log('getting Favorites');
-            window.api.getFavorites().then(f => {
-                setFavorites(toFavoritesProps(f));
-                setAppState({
-                    ...appState,
-                    isLoaderShowing: false,
-                    title: "Favorites"
-                });
-            });
-        } else if (appState.title !== "Favorites") {
-            setAppState({
-                ...appState,
-                isLoaderShowing: true,
-                title: "Favorites"
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.title, appState.isLoaderShowing]);
+    const favorites = usePromise(() => window.api.getFavorites().then(toFavoritesProps));
+    useShowLoader(favorites, () => ({ title: "Favorites" }));
 
     return (
         <StyledFavoritesContainer>

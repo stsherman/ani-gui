@@ -1,11 +1,10 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
 import MaterialIcon from "./material-icon";
 import {Params, useParams} from "react-router-dom";
-import useAppContext from "../hooks/use-app-context";
-import useDetailsContext from "../hooks/use-details-context";
 import {toDetailsState} from "../mappers/details";
-import {toHistoryProps} from "../mappers/history";
+import usePromise from "../hooks/use-promise";
+import useShowLoader from "../hooks/use-show-loader";
 
 const StyledDetailsContainer = styled.div`
   display: flex;
@@ -60,33 +59,9 @@ const StyledWrappingRow = styled(StyledRow)`
 `;
 
 export default function Details() {
-    const [appState, setAppState] = useAppContext();
     let {id}: Readonly<Params<"id">> = useParams();
-
-    const [details, setDetails] = useDetailsContext();
-
-    useEffect(() => {
-        if (id) {
-            if (appState.isLoaderShowing) {
-                console.log('getting Details');
-                window.api.getDetails(id).then(getDetailsResponse => {
-                    setDetails(toDetailsState(getDetailsResponse));
-                    setAppState({
-                        ...appState,
-                        title: getDetailsResponse.title,
-                        isLoaderShowing: false
-                    });
-                });
-            } else if (!details || appState.title !== details.title) {
-                setAppState({
-                    ...appState,
-                    isLoaderShowing: true,
-                    title: undefined
-                });
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, appState.title, appState.isLoaderShowing]);
+    const details = usePromise(() => window.api.getDetails(id).then(toDetailsState));
+    useShowLoader(details, () => ({ title: details?.title }));
 
     return (
         <>

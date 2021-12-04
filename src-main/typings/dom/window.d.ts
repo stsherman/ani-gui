@@ -1,7 +1,7 @@
 interface Api {
     getFavorites: () => Promise<Anime[]>,
     getHistory: () => Promise<Anime[]>,
-    getDetails: (id: string) => Promise<GetDetailsResponse>,
+    getDetails: (id: string | undefined) => Promise<GetDetailsResponse>,
     search: (query: string) => Promise<SearchResponse>,
 }
 
