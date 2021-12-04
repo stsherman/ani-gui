@@ -7,6 +7,7 @@ import Tile from "./tile";
 
 const StyledHistoryContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 
 export default function History({onTileClick}: Partial<HistoryProps>) {

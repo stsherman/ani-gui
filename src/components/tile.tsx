@@ -1,25 +1,37 @@
 import React from "react";
 import styled from "styled-components";
+import Breakpoints from "../constants/breakpoints";
 
 const StyledTileContainer = styled.div`
   padding: 2px;
-
+  flex-basis: calc(33.3% - 8px);  
+  margin: 4px;
+  
   &:hover {
     border: 2px solid #FFFFFF;
     padding: 0;
+  }
+  
+  @media (min-width: ${Breakpoints.sm}px) {
+    flex-basis: calc(25% - 8px);  
+  }
+
+  @media (min-width: ${Breakpoints.lg}px) {
+    flex-basis: calc(20% - 8px);
   }
 `;
 
 const StyledTile = styled.div`
   display: flex;
   flex-direction: column;
-  width: 180px;
   background: #474747;
   cursor: pointer;
+  width: 100%;
+  height: 100%;
 `;
 
 const StyledTileImg = styled.img`
-  width: 180px;
+  width: 100%;
   height: 232px;
   object-fit: cover;
 `;

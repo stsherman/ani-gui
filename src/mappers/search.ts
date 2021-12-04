@@ -1,11 +1,12 @@
-export function toSearchResultProps(searchResponse: SearchResponse): SearchResultProps[] {
-    const searchResultProps = [];
+export function toTileProps(searchResponse: SearchResponse): TileProps[] {
+    const tileProps = [];
     for (let i = 0; i < searchResponse.length; i++) {
-        searchResultProps.push({
+        tileProps.push({
             id: searchResponse[i].id,
             imageUrl: searchResponse[i].image,
-            displayName: searchResponse[i].name
+            displayName: searchResponse[i].name,
+            description: "",
         });
     }
-    return searchResultProps;
+    return tileProps;
 }

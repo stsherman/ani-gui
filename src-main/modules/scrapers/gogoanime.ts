@@ -26,7 +26,7 @@ export namespace GogoAnimeScraper {
             });
     }
 
-    export async function search(query: string): Promise<SearchResponse> {
+    export async function search(query: string | undefined): Promise<SearchResponse> {
         if (!query) return [];
         return await get('https://gogoanime.wiki/search.html', {'keyword': query})
             .then(x => x.text())

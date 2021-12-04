@@ -7,9 +7,9 @@ import SideNav from "./side-nav";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import Details from "./details";
 import useAppContext from "../hooks/use-app-context";
-import {DetailsProvider} from "../hooks/use-details-context";
 import Loader from "./loader";
 import History from "./history";
+import SearchResults from "./search-results";
 
 const StyledAppContainer = styled.div`
   display: flex;
@@ -24,23 +24,20 @@ const StyledAppContainer = styled.div`
 
 export default function App() {
     let navigate = useNavigate();
-    const [appState, setAppState] = useAppContext();
+    const [appState, , updateAppState] = useAppContext();
 
     const onSearchClick = async (query: string) => {
-        const searchResult = await window.api.search(query);
-        console.log('search result', searchResult);
+        navigate(`/search/${query}`, { replace: true });
     }
 
-    const onMenuClick = () => setAppState({ ...appState, isSideNavOpen: true });
+    const onMenuClick = () => updateAppState({ isSideNavOpen: true });
 
     const onSideNavItemClick = (target: string) => {
-        console.log('onSideNavItemClick', target);
         navigate(`/${target}`, { replace: true });
-        setAppState({ ...appState, isSideNavOpen: false });
+        updateAppState({ isSideNavOpen: false });
     }
 
-    const onFavoritesTileClick = (id: string) => navigate(`/details/${id}`, { replace: true });
-    const onHistoryTileClick = (id: string) => navigate(`/details/${id}`, { replace: true });
+    const showDetails = (id: string) => navigate(`/details/${id}`, { replace: true });
 
     return (
         <StyledAppContainer>
@@ -55,10 +52,11 @@ export default function App() {
             />
             <Content>
                 <Routes>
-                    <Route path="/" element={<Favorites onTileClick={onFavoritesTileClick} />} />
-                    <Route path="/favorites" element={<Favorites onTileClick={onFavoritesTileClick} />} />
-                    <Route path="/history" element={<History onTileClick={onHistoryTileClick} />} />
-                    <Route path="/details/:id" element={<DetailsProvider><Details /></DetailsProvider>} />
+                    <Route path="/" element={<Favorites onTileClick={showDetails} />} />
+                    <Route path="/favorites" element={<Favorites onTileClick={showDetails} />} />
+                    <Route path="/history" element={<History onTileClick={showDetails} />} />
+                    <Route path="/details/:id" element={<Details />} />
+                    <Route path="/search/:query" element={<SearchResults onTileClick={showDetails} />} />
                 </Routes>
             </Content>
             <Loader isShown={appState.isLoaderShowing} />

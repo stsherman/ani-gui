@@ -49,6 +49,13 @@ export default function Header({title, onSearchClick, onMenuClick}: Partial<Head
         const query = inputRef.current?.value;
         if (query) onSearchClick?.(query);
     }
+    const onKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        switch (event.key) {
+            case "Enter":
+                triggerSearch();
+                break;
+        }
+    }
     return (
         <StyledHeaderContainer>
             <StyledHeaderMenu>
@@ -56,7 +63,7 @@ export default function Header({title, onSearchClick, onMenuClick}: Partial<Head
             </StyledHeaderMenu>
             <StyledHeaderTitle>{title}</StyledHeaderTitle>
             <StyledHeaderSearchContainer>
-                <StyledHeaderSearchInput type="text" placeholder="Search anime" ref={inputRef}/>
+                <StyledHeaderSearchInput type="text" placeholder="Search anime" ref={inputRef} onKeyDown={onKeyPress}/>
                 <StyledMaterialIcon onClick={triggerSearch}>search</StyledMaterialIcon>
             </StyledHeaderSearchContainer>
         </StyledHeaderContainer>

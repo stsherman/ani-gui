@@ -7,6 +7,7 @@ import Tile from "./tile";
 
 const StyledFavoritesContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 
 export default function Favorites({onTileClick}: Partial<FavoritesProps>) {
