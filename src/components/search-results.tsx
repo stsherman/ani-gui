@@ -5,7 +5,7 @@ import {toPaginationProps, toTileProps} from "../mappers/search";
 import useShowLoader from "../hooks/use-show-loader";
 import {Params, useParams} from "react-router-dom";
 import Tile from "./tile";
-import MaterialIcon from "./material-icon";
+import Pagination from "./pagination";
 
 const StyledSearchResultsContainer = styled.div`
   position: relative;
@@ -27,37 +27,6 @@ const StyledSearchResultTilesContainer = styled.div`
   &::-webkit-scrollbar-thumb {
     background-color: #b7b7f9;
     border-radius: 20px;
-  }
-`;
-
-const StyledSearchResultPagination = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 16px 0 0;
-
-  & > * {
-    border-radius: 4px;
-    padding: 4px 8px;
-  }
-  
-  & > [class*=material-icons] {
-    padding: 2px 0;
-  }
-
-  & > *:not([disabled]) {
-    cursor: pointer;
-    &:hover {
-      background: #4b4b4b;
-    }
-  }
-
-  && > [class*=selected] {
-    background: #525252;
-  }
-
-  & > [class*=material-icons][disabled] {
-    color: grey;
   }
 `;
 
@@ -84,27 +53,12 @@ export default function SearchResults({onTileClick}: SearchResultsProps) {
                             key={index}
                         />))}
                 </StyledSearchResultTilesContainer>
-                <StyledSearchResultPagination>
-                    <MaterialIcon
-                        disabled={page === 1}
-                        onClick={() => setPage(page - 1)}
-                    >
-                        navigate_before
-                    </MaterialIcon>
-                    {searchResponse.pagination.map((pageNumber: number, index: number) =>
-                        <span
-                            key={index}
-                            className={pageNumber === page ? 'selected' : ''}
-                            onClick={() => setPage(pageNumber)}>{pageNumber}
-                        </span>
-                    )}
-                    <MaterialIcon
-                        disabled={page === searchResponse.pagination[searchResponse.pagination.length - 1]}
-                        onClick={() => setPage(page + 1)}
-                    >
-                        navigate_next
-                    </MaterialIcon>
-                </StyledSearchResultPagination>
+                <Pagination
+                    minPage={searchResponse.pagination.minPage}
+                    maxPage={searchResponse.pagination.maxPage}
+                    activePage={page}
+                    onNavigate={setPage}
+                />
             </StyledSearchResultsContainer>}
         </>
     );

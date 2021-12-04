@@ -1,1 +1,6 @@
-interface PaginationProps extends Array<number>{}
+interface PaginationProps {
+    minPage: number,
+    maxPage: number,
+    activePage: number,
+    onNavigate?: (page: number) => void,
+}

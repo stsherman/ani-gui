@@ -12,11 +12,9 @@ export function toTileProps({ searchResults }: SearchResponse): TileProps[] {
 }
 
 export function toPaginationProps({ pagination }: SearchResponse): PaginationProps {
-    const paginationProps = [];
-
-    for (let i = pagination.min; i <= pagination.max; i++) {
-        paginationProps.push(i);
-    }
-    
-    return paginationProps;
+    return {
+        minPage: pagination.min,
+        maxPage: pagination.max,
+        activePage: pagination.min,
+    };
 }
